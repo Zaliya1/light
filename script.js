@@ -26,11 +26,17 @@ const checkStroke = function(str) {
         }
     }
 };
+const updateCount = function(num) {  // убрать пробелы в цифрах
+    return parseInt(String(num));  
+};
 const asking = function() {
     do {
         title = prompt("Как называется ваш проект?"); // можно только строки. цифры и пробел нельзя
     } while (!isNaN(title));
     screens = prompt("Какие типы экранов нужно разработать?", "Простые,Сложные,Интерактивные");
+    while (screens === null) {   // при отмене будет не null, а заново вопрос
+        screens = prompt("Какие типы экранов нужно разработать?", "Простые,Сложные,Интерактивные");
+    }
     checkStroke(screens);
     do {
         screenPrice = prompt("Сколько будет стоить данная работа?", 12000); // можно указать только число. пробел нельзя
@@ -48,7 +54,7 @@ const getAllServicePrices = function() {
             }
             count = +prompt("Сколько это будет стоить?");
             if (isNumber(count)) {
-                sum += count;
+                sum += updateCount(count);
             } else {
                 count = +prompt("Сколько это будет стоить?");
             }
@@ -83,6 +89,7 @@ const getRollbackMessage = function(totalPrice) {
 asking();
 allServicePrices = getAllServicePrices();
 getFullPrice(screenPrice, allServicePrices);
+screenPrice = updateCount(screenPrice);
 title = getTitle(title);
 
 getRollbackMessage(fullPrice);
