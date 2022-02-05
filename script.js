@@ -30,9 +30,13 @@ getAllServicePrices: function() {
         for (let i = 0; i<2; i++) {
             let count = 0;
             if (i === 0) {
-                appData.service1 = prompt("Какой дополнительный тип услуги нужен?");
+                do {
+                    appData.service1 = prompt("Какой дополнительный тип услуги нужен?");
+                } while (!isNaN(appData.service1));
             } else if (i === 1) {
-                appData.service2 = prompt("Какой дополнительный тип услуги нужен?");
+                do {
+                    appData.service2 = prompt("Какой дополнительный тип услуги нужен?");
+                } while (!isNaN(appData.service2));
             }
             do {
                 count = +prompt("Сколько это будет стоить?");
@@ -79,7 +83,7 @@ logger: function() {
     console.log("Стоимость за вычетом процента: " + appData.getServicePercentPrices(appData.rollback)); 
     for (let key in appData) {
         if (typeof appData[key] !== "function") {
-            console.log("Метод " + key + " : " + appData[key]);
+            console.log("Свойство " + key + " : " + appData[key]);
         }
     }
 },
