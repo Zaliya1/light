@@ -29,11 +29,12 @@ const span = document.querySelector('.rollback > .main-controls__range > .range-
 console.log(inputRange);
 console.log(span);
 //7 задание
+const inputsArr = [];
 const inputs = document.getElementsByClassName('total-input');
-console.log(inputs);
 for (let i = 0; i< inputs.length; i++) {
-    console.log(inputs[i]);
+    inputsArr.push(inputs[i]);
 }
+console.log(inputsArr);
 //8 задание
 let screens = document.querySelectorAll('.screen');
 console.log(screens);
