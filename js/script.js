@@ -29,12 +29,13 @@ const span = document.querySelector('.rollback > .main-controls__range > .range-
 console.log(inputRange);
 console.log(span);
 //7 задание
-const inputsArr = [];
 const inputs = document.getElementsByClassName('total-input');
-for (let i = 0; i< inputs.length; i++) {
-    inputsArr.push(inputs[i]);
-}
-console.log(inputsArr);
+const screenPrice = inputs[0];
+const screens = inputs[1];
+const allServicePrices = inputs[2];
+const rollbackMessage = inputs[3];
+const servicePercentPrices = inputs[4];
+console.log(screens);
 //8 задание
 let screens = document.querySelectorAll('.screen');
 console.log(screens);
