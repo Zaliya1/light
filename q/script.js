@@ -36,11 +36,7 @@ countScreens: 0,
 check: true,
 init: function() {
     appData.addTitle();
-    buttonStart.disabled = true;
-    setTimeout(appData.checkInputs, 1000);
-    if(appData.check === false) {
-        appData.buttonStartActive();  
-    }
+    // buttonStart.disabled = true;
     appData.getRollback();
     buttonStart.addEventListener('click', appData.start);
     buttonPlus.addEventListener('click', appData.addScreenBlock);
@@ -78,27 +74,6 @@ checkStroke: function(str) {
 buttonStartActive: function() {
     buttonStart.disabled = false;
 },
-checkInputs: function() {
-    const selects = document.querySelectorAll('.screen > .main-controls__select > select');
-    const inputs = document.querySelectorAll('.screen > .main-controls__input > input');
-    console.log(selects);
-    console.log(inputs);
-
-    for (let i = 0; i<selects.length; i++) {
-        if (selects[i] === "Тип экранов") {
-            appData.check = false;
-            return;
-        }
-    }
-    for (let i = 0; i<inputs.length; i++) {
-        if (inputs[i] === 0) {
-            appData.check = false;
-            return;
-        }
-    }
-    return appData.check;
-
-},
 getRollback: function(){
     inputRange.addEventListener('input', function(){
         appData.rollback= inputRange.value;
@@ -122,17 +97,22 @@ logger: function() {
 },
 start: function() {
     appData.addScreens();
+    appData.checkScreens();
+    appData.removeScreens();
     appData.addServices();
     appData.addPrices();
-    console.log(appData);
     appData.showResult();
 },
 showResult: function() {
+    if (appData.check === true) {
+    appData.addCountScreens();
     total.value = appData.screenPrice;
     totalCountOther.value = appData.servicePricesNumber + appData.servicePricesPercent;
     fullTotalCount.value = appData.fullPrice;
     totalCountRollback.value = appData.servicePercentPrice;
     totalCount.value = appData.countScreens;
+    } 
+    // else {console.log('NO');}
 },
 addScreens: function() {
     screens = document.querySelectorAll('.screen');
@@ -140,16 +120,37 @@ addScreens: function() {
         const select = screen.querySelector('select');
         const input = screen.querySelector('input');
         const selectName = select.options[select.selectedIndex].textContent;
-        appData.countScreens += +input.value;
+        // appData.countScreens += +input.value; Не использую этот код, т.к. он прибавляет кол-во экранов, которое без выбранного типа. Вместо этого добавляю в массив ключ quantity и пишу функцию addCountScreens, которая считает общее кол-во только после проверки массива на true
         appData.screens.push({
             id: index,
             name: selectName,
-            price: +select.value * +input.value
+            price: +select.value * +input.value,
+            quantity: +input.value,
         });
         
     });
-    console.log(appData.screens);
-    
+    console.log(appData.screens);  
+},
+checkScreens: function () {
+    for (let i = 0; i<appData.screens.length; i++) {
+        if(appData.screens[i].price === 0) {
+            appData.check = false;
+            return;
+        } else {
+            appData.check = true;
+        }
+    }
+},
+addCountScreens: function () {
+    for (let i = 0; i<appData.screens.length; i++) {
+        appData.countScreens += appData.screens[i].quantity;
+    }
+    console.log(appData.countScreens);
+},
+removeScreens: function () {
+    if (appData.check === false) {
+        appData.screens.length = 0;
+    }
 },
 addServices: function() {
     percentItems.forEach(function(item){
