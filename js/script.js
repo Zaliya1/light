@@ -23,11 +23,11 @@ const appData = {
 title: "",
 screens: [],
 screenPrice: 0,
-rollback : 9,
+rollback : 0,
 adaptive: true,
 servicesPercent: {},
 servicesNumber: {},
-servicePricesPercent: 0,  // доп услуги в %
+servicePricesPercent: 0,
 servicePricesNumber: 0,
 titleUpdate: "",
 servicePercentPrice: 0,
@@ -36,13 +36,14 @@ countScreens: 0,
 check: true,
 init: function() {
     appData.addTitle();
-    // buttonStart.disabled = true;
     appData.getRollback();
     buttonStart.addEventListener('click', appData.start);
     buttonPlus.addEventListener('click', appData.addScreenBlock);
 },
 addScreenBlock: function() {
     const cloneScreen = screens[0].cloneNode(true);
+    const cloneInput = cloneScreen.querySelector('.main-controls__input > input');
+    cloneInput.value= "";
     screens = document.querySelectorAll('.screen');
     screens[screens.length-1].after(cloneScreen);
 },
@@ -60,7 +61,6 @@ addPrices: function () {
         appData.servicePricesPercent += appData.screenPrice * (appData.servicesPercent[key]/100);
     }
     appData.fullPrice = +appData.screenPrice + appData.servicePricesNumber + appData.servicePricesPercent;
-    console.log(appData);
     appData.servicePercentPrice = appData.fullPrice - appData.fullPrice*appData.rollback/100;
 },
 checkStroke: function(str) {
@@ -112,7 +112,14 @@ showResult: function() {
     totalCountRollback.value = appData.servicePercentPrice;
     totalCount.value = appData.countScreens;
     } 
-    // else {console.log('NO');}
+    console.log(appData);
+    appData.clearOldResult();
+},
+clearOldResult: function() {
+    appData.screens.length = 0;
+    appData.countScreens = 0;
+    appData.servicePricesNumber = 0;
+    appData.servicePricesPercent = 0;
 },
 addScreens: function() {
     screens = document.querySelectorAll('.screen');
@@ -129,7 +136,6 @@ addScreens: function() {
         });
         
     });
-    console.log(appData.screens);  
 },
 checkScreens: function () {
     for (let i = 0; i<appData.screens.length; i++) {
@@ -145,7 +151,6 @@ addCountScreens: function () {
     for (let i = 0; i<appData.screens.length; i++) {
         appData.countScreens += appData.screens[i].quantity;
     }
-    console.log(appData.countScreens);
 },
 removeScreens: function () {
     if (appData.check === false) {
@@ -157,9 +162,6 @@ addServices: function() {
         const check = item.querySelector('input[type = checkbox]');
         const label = item.querySelector('label');
         const input = item.querySelector('input[type = text]');
-        console.log(check);
-        console.log(label);
-        console.log(input);
         if(check.checked) {
             appData.servicesPercent[label.textContent] = +input.value;
         }
@@ -168,9 +170,6 @@ addServices: function() {
         const check = item.querySelector('input[type = checkbox]');
         const label = item.querySelector('label');
         const input = item.querySelector('input[type = text]');
-        console.log(check);
-        console.log(label);
-        console.log(input);
         if(check.checked) {
         appData.servicesNumber[label.textContent] = +input.value;
         }
