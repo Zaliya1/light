@@ -4,14 +4,29 @@ const headerButton = document.querySelector('.header-button');
 const todoList = document.querySelector('.todo-list');
 const todoCompleted = document.querySelector('.todo-completed');
 
-const toDoData = [];
-const toLocal = function (key) {
-    localStorage.setItem(key, todoList.innerHTML);
+let toDoData = [];
+const local = function() {
+    toDoData = JSON.parse(localStorage.getItem('key'));
+    for (let i =0; i< toDoData.length; i++) {
+        const li = document.createElement('li');
+        li.classList.add('todo-item');
+        li.innerHTML = '<span class="text-todo">' + toDoData[i].text + '</span>'+
+        '<div class="todo-buttons">' + 
+		'<button class="todo-remove"></button>' + 
+		'<button class="todo-complete"></button>' + 
+		'</div>';
+        todoList.append(li);
+    }
 };
+if (localStorage.getItem('key')) {
+    local();
+}
 const render = function () {
+    console.log(toDoData);
     todoList.innerHTML = "";
     todoCompleted.innerHTML = "";
-    toDoData.forEach(function (item) {
+
+    toDoData.forEach(function (item, index) {
         const li = document.createElement('li');
         li.classList.add('todo-item');
         li.innerHTML = '<span class="text-todo">' + item.text + '</span>'+
@@ -21,21 +36,25 @@ const render = function () {
 		'</div>';
         if (item.completed) {
             todoCompleted.append(li);
-            toLocal('completed');
         } else {
             todoList.append(li);
-            toLocal('nocompleted');
         }
+        let items = document.querySelectorAll('.todo-item'); // почему items is not a function?
+        console.log(items);
+
         li.querySelector('.todo-complete').addEventListener('click', function(){
+            console.log('.todo-complete');
             item.completed = !item.completed;
             render();
         });
         li.querySelector('.todo-remove').addEventListener('click', function(){
-            delete toDoData[toDoData.indexOf(item)];
+            console.log('.todo-remove');
+            delete toDoData[index];
             render();
         });
+
     });
-    console.log(localStorage);
+    
 };
 
 todoControl.addEventListener('submit', function(event) {
@@ -46,13 +65,9 @@ todoControl.addEventListener('submit', function(event) {
             completed: false
         };
         toDoData.push(newToDo);
+        localStorage.setItem('key', JSON.stringify(toDoData));
         render();
         headerInput.value ="";
     }
+    console.log('submit');
 });
-if (localStorage.getItem('nocompleted')) {
-    todoList.innerHTML = localStorage.getItem('nocompleted'); 
-}
-if (localStorage.getItem('completed')) {
-    todoCompleted.innerHTML = localStorage.getItem('completed');    
-}
