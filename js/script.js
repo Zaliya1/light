@@ -4,9 +4,11 @@ const headerButton = document.querySelector('.header-button');
 const todoList = document.querySelector('.todo-list');
 const todoCompleted = document.querySelector('.todo-completed');
 
-let toDoData = [];
+
+
+const toDoData = JSON.parse(localStorage.getItem('toDoItems')) || [];
 const local = function() {
-    toDoData = JSON.parse(localStorage.getItem('key'));
+    console.log(toDoData);
     for (let i =0; i< toDoData.length; i++) {
         const li = document.createElement('li');
         li.classList.add('todo-item');
@@ -15,13 +17,18 @@ const local = function() {
 		'<button class="todo-remove"></button>' + 
 		'<button class="todo-complete"></button>' + 
 		'</div>';
-        todoList.append(li);
+        if (toDoData[i].completed) {
+            todoCompleted.append(li);
+        } else if (!toDoData[i].completed) {
+            todoList.append(li);
+        }
     }
 };
-if (localStorage.getItem('key')) {
+if (localStorage.getItem('toDoItems')) {
     local();
 }
 const render = function () {
+    localStorage.setItem('toDoItems', JSON.stringify(toDoData));
     console.log(toDoData);
     todoList.innerHTML = "";
     todoCompleted.innerHTML = "";
@@ -39,23 +46,26 @@ const render = function () {
         } else {
             todoList.append(li);
         }
-        let items = document.querySelectorAll('.todo-item'); // почему items is not a function?
-        console.log(items);
-
-        li.querySelector('.todo-complete').addEventListener('click', function(){
-            console.log('.todo-complete');
-            item.completed = !item.completed;
-            render();
-        });
-        li.querySelector('.todo-remove').addEventListener('click', function(){
-            console.log('.todo-remove');
-            delete toDoData[index];
-            render();
-        });
-
     });
     
+    // li.querySelector('.todo-remove').addEventListener('click', function(){
+    //     console.log('.todo-remove');
+    //     delete toDoData[index];
+    //     render();
+    // });
+    
 };
+const liComplete = document.querySelectorAll('li > .todo-buttons > .todo-complete');
+const liDelete = document.querySelectorAll('li > .todo-buttons > .todo-remove');
+    for (let i =0; i< liComplete.length; i++) {
+        liComplete[i].addEventListener('click', function(){
+            console.log('.todo-complete');
+            console.log(toDoData);
+            
+            toDoData[i].completed = !toDoData[i].completed;
+            render();
+        });
+    }
 
 todoControl.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -65,7 +75,7 @@ todoControl.addEventListener('submit', function(event) {
             completed: false
         };
         toDoData.push(newToDo);
-        localStorage.setItem('key', JSON.stringify(toDoData));
+        // localStorage.setItem('toDoItems', JSON.stringify(toDoData));
         render();
         headerInput.value ="";
     }
