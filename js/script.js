@@ -39,9 +39,8 @@ countScreens: 0,
 check: true,
 init: function() {
     this.addTitle();
-    this.getRollback();
-    // this.getRollback.call(appData); // ????
-    buttonStart.addEventListener('click', this.start);
+    this.getRollback.bind(this)();
+    buttonStart.addEventListener('click', this.start.bind(this));
     buttonPlus.addEventListener('click', this.addScreenBlock);
 },
 addScreenBlock: function() {
@@ -76,70 +75,86 @@ checkStroke: function(str) {
     }
 },
 getRollback: function(){
-    inputRange.addEventListener('input', function(){
-        appData.rollback= inputRange.value;
-        span.textContent = appData.rollback + "%";
-        return appData.rollback;
-    });
-    // inputRange.addEventListener('input', function(){  // ????
-    //     this.rollback= inputRange.value;
-    //     span.textContent = this.rollback + "%";
-    //     return this.rollback;
-    // });
+    const startRollback = () => {
+        this.rollback= inputRange.value;
+        span.textContent = this.rollback + "%";
+        return this.rollback;
+    };
+    inputRange.addEventListener('input', startRollback.bind(appData)); 
+    // Привязываю к appData, потому что переменная inputRange задана не в appData
 },
 disabledBtn: function() {
+    const selectScreen = document.querySelectorAll('select[name="views-select"]');
+    const inputScreen = document.querySelectorAll('input[placeholder="Количество экранов"]');
+    selectScreen.forEach(item => {
+        item.disabled = true;
+    });
+    inputScreen.forEach(item => {
+        item.disabled = true;
+    });
     buttonStart.disabled = true;
-    selectScreen.disabled = true;
-    inputScreen.disabled = true;
-    inputRange.disabled = true;
+    // inputRange.disabled = true;
     items.forEach(item => {
         item.disabled = true;
     });
-    appData.resetBtn();
+    buttonPlus.disabled = true;
+    this.resetBtn();
 },
 reset: function() {
     buttonStart.style.display = "block";
     buttonReset.style.display = "none";
     buttonStart.disabled = false;
-    selectScreen.disabled = false;
-    inputScreen.disabled = false;
-    inputRange.disabled = false;
+    const selectScreen = document.querySelectorAll('select[name="views-select"]');
+    const inputScreen = document.querySelectorAll('input[placeholder="Количество экранов"]');
+    selectScreen.forEach(item => {
+        item.disabled = false;
+    });
+    inputScreen.forEach(item => {
+        item.disabled = false;
+    });
+    // inputRange.disabled = false;
     items.forEach(item => {
         item.disabled = false;
     });
-    appData.clearInputs();
+    buttonPlus.disabled = false;
+    this.clearInputs();
 },
 clearInputs: function () {
     const checkbox = document.querySelectorAll('.main-controls__checkbox > input');
     checkbox.forEach(item => {
         item.checked = false;
     });
-    selectScreen.value = "";
-    inputScreen.value = "";
-    console.dir(checkbox);
+    const selectScreen = document.querySelectorAll('select[name="views-select"]');
+    const inputScreen = document.querySelectorAll('input[placeholder="Количество экранов"]');
+    selectScreen.forEach(item => {
+        item.value = "";
+    });
+    inputScreen.forEach(item => {
+        item.value = "";
+    });
     this.screenPrice = 0;
     this.fullPrice = 0;
     this.rollback = 0;
+    this.countScreens = 0;
     this.servicePercentPrice = 0;
+    this.servicePricesNumber =0;
     this.showResult();
-    inputRange.value = 0;
-    console.log(inputRange);
-    span.textContent = appData.rollback + "%";
 },
 resetBtn: function() {
     buttonStart.style.display = "none";
     buttonReset.style.display = "block";
-    // buttonReset.style.marginLeft = "10px";
-    buttonReset.addEventListener('click', appData.reset);
+    buttonReset.addEventListener('click', this.reset.bind(this));
 },
 start: function() {
-    appData.addScreens();
-    appData.checkScreens();
-    appData.removeScreens();
-    appData.addServices();
-    appData.addPrices();
-    appData.showResult();
-    appData.disabledBtn();
+    this.addScreens();
+    this.checkScreens();
+    this.removeScreens();
+    this.addServices();
+    this.addPrices();
+    this.showResult();
+    if (this.fullPrice !== 0) {
+        this.disabledBtn();
+    }
 },
 showResult: function() {
     if (this.check === true) {
@@ -150,8 +165,7 @@ showResult: function() {
     totalCountRollback.value = this.servicePercentPrice;
     totalCount.value = this.countScreens;
     } 
-    console.log(appData);
-    appData.clearOldResult();
+    this.clearOldResult();
 },
 clearOldResult: function() {
     this.screens.length = 0;
