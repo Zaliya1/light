@@ -80,7 +80,7 @@ getRollback: function(){
         span.textContent = this.rollback + "%";
         return this.rollback;
     };
-    inputRange.addEventListener('input', startRollback.bind(appData)); 
+    inputRange.addEventListener('input', startRollback.bind(this)); 
     // Привязываю к appData, потому что переменная inputRange задана не в appData
 },
 disabledBtn: function() {
