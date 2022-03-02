@@ -1,0 +1,56 @@
+const calculate = (price = 100) => {
+    const calcBlock  = document.querySelector('.calc-block');
+    const calcType   = document.querySelector('.calc-type');
+    const calcSquare  = document.querySelector('.calc-square');
+    const calcCount  = document.querySelector('.calc-count');
+    const calcDay  = document.querySelector('.calc-day');
+    const total  = document.querySelector('#total');
+    
+    const countCalc = () => {
+        const calcTypeValue = +calcType.options[calcType.selectedIndex].value;
+        const calcSquareValue = calcSquare.value;
+        let totalValue = price * calcTypeValue * calcSquareValue;
+        let calcCountValue = 1;
+        let calcDayValue = 1;
+        let oldResult = total.textContent;
+        let newResult = totalValue;
+
+        if(calcCount.value > 1) {
+            calcCountValue += +calcCount.value/10;
+        }
+        if(calcDay.value && calcDay.value < 5) {
+            calcDayValue = 2;
+        } else if(calcDay.value && calcDay.value < 10) {
+            calcDayValue = 1.5;
+        } else if(calcDay.value && calcDay.value >= 10){
+            calcDayValue = 1;
+        }
+        if (calcTypeValue && calcSquareValue) {
+            totalValue = price * calcTypeValue * calcSquareValue * calcCountValue * calcDayValue;
+        } else {
+            totalValue = 0;
+        }
+
+        // Вывод результата калькулятора в консоль. Идея в том, что если предыдущий результат был меньше нынешнего, то к предыдущему прибавляется 1 пока они не сравняются. И наоборот. Только конечный результат все равно показывается очень быстро
+        if (calcTypeValue && calcSquareValue && Math.min(oldResult, newResult) === +oldResult) {
+            while (oldResult < newResult) {
+                setTimeout(oldResult++, 1000);
+                setTimeout(total.textContent = oldResult, 1000);
+            }
+        } else if (calcTypeValue && calcSquareValue && Math.max(oldResult, newResult) === +oldResult) {
+            while (oldResult > newResult) {
+                setTimeout(oldResult--, 1000);
+                setTimeout(total.textContent = oldResult, 1000);
+            }
+        }
+        // total.textContent = totalValue;
+    };
+    calcBlock.addEventListener('change', (e)=> {
+        if (e.target === calcType || e.target === calcSquare || 
+            e.target === calcCount || e.target === calcDay) {
+            countCalc();
+        };
+        
+    })
+};
+export default calculate;
