@@ -30,20 +30,7 @@ const calculate = (price = 100) => {
         } else {
             totalValue = 0;
         }
-
-        // Вывод результата калькулятора в консоль. Идея в том, что если предыдущий результат был меньше нынешнего, то к предыдущему прибавляется 1 пока они не сравняются. И наоборот. Только конечный результат все равно показывается очень быстро
-        if (calcTypeValue && calcSquareValue && Math.min(oldResult, newResult) === +oldResult) {
-            while (oldResult < newResult) {
-                setTimeout(oldResult++, 1000);
-                setTimeout(total.textContent = oldResult, 1000);
-            }
-        } else if (calcTypeValue && calcSquareValue && Math.max(oldResult, newResult) === +oldResult) {
-            while (oldResult > newResult) {
-                setTimeout(oldResult--, 1000);
-                setTimeout(total.textContent = oldResult, 1000);
-            }
-        }
-        // total.textContent = totalValue;
+        total.textContent = totalValue;
     };
     calcBlock.addEventListener('change', (e)=> {
         if (e.target === calcType || e.target === calcSquare || 
