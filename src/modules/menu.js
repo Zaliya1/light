@@ -13,6 +13,5 @@ const menu = () => {
             handleMenu();
         }
     });
-
 };
 export default menu;

@@ -1,12 +1,13 @@
+import {animate} from './helpers'
 const modal = () => {
     const buttons = document.querySelectorAll('.popup-btn');
     const modal = document.querySelector('.popup');
     const btnClose = modal.querySelector('.popup-close');
     const popupContent = modal.querySelector('.popup-content');
     const width = screen.availWidth;
-
+    
     if(width >= 768) {
-        modal.style.transition = "all 1s ease ";
+        // modal.style.transition = "all 1s ease ";
         modal.style.opacity = 0;
         modal.style.width = 'auto';
         modal.style.display = "block";
@@ -16,17 +17,36 @@ const modal = () => {
             btn.addEventListener('click', () => {
                 popupContent.style.display = 'block';
                 popupContent.display = 'block';
-                modal.style.opacity = 1;
+                // modal.style.opacity = 1;
                 modal.style.width = '100%';
+                animate({
+                    duration: 500,
+                    timing(timeFraction) {
+                      return timeFraction;
+                    },
+                    draw(progress) {
+                        modal.style.opacity = progress;
+                    },
+                });
             });
         });
         modal.addEventListener('click', (event) => {
             if (!event.target.closest('.popup-content') || event.target.classList.contains('popup-close')) {
-                modal.style.opacity = 0;
+                // modal.style.opacity = 0;
                 modal.style.width = 'auto';
                 popupContent.style.display = 'none';
+                animate({
+                    duration: 500,
+                    timing(timeFraction) {
+                      return timeFraction;
+                    },
+                    draw(progress) {
+                        modal.style.opacity = Math.abs(progress-1);
+                    },
+                });
             }
         });
+        
     } else {
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -37,5 +57,6 @@ const modal = () => {
             modal.style.display = "none";
         });
     }
+   
 };
 export default modal;
