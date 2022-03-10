@@ -25,23 +25,40 @@ const validateForm = () => {
             event.target.value = event.target.value.replace(/[^а-яА-Я\ ]/g, '');
         });
         item.addEventListener('blur', (event) => {
-            event.target.value = event.target.value.replace(/([а-яА-Я]){1}([а-яА-Я]){1,}]/g, ($1, $2)=> {
-                return `${$1}`.toUpperCase() + `${$2}`.toLowerCase();
-            });
-            event.target.value = event.target.value.replace(/([а-яА-Я]){1,}/g, () => {
+            event.target.value = event.target.value.replace(/([а-яА-Я\ ]){1,}/g, () => {
                 let str = event.target.value;
-                let updateStr = '';
-                for (let i = 0; i<str.length; i++) {
-                    if (i === 0) {
-                        updateStr += str[i].toUpperCase(); 
-                    } else {
-                        updateStr += str[i].toLowerCase();
+                if (!str.includes(" ")) {
+                    let updateStr = '';
+                    for (let i = 0; i<str.length; i++) {
+                        if (i === 0) {
+                            updateStr += str[i].toUpperCase(); 
+                        } else {
+                            updateStr += str[i].toLowerCase();
+                        }
                     }
+                    return updateStr;
+                } else {
+                    let arr = str.split(" ");
+                    let updateStr = '';
+                    for (let n = 0; n<arr.length; n++) {
+                        for (let i = 0; i<arr[n].length; i++) {
+                            if (i === 0) {
+                                updateStr += arr[n][i].toUpperCase(); 
+                            } else {
+                                updateStr += arr[n][i].toLowerCase();
+                            }
+                        }
+                        updateStr += " ";
+                    }
+                    updateStr = updateStr.replace(/ $/g, '');
+                    return updateStr
                 }
-                return updateStr;
             });
-            
+            if (item.value.length < 2) {
+                item.value = "";
+            }
         });
+        
 
     });
     formEmails.forEach(item => {
@@ -60,6 +77,9 @@ const validateForm = () => {
         item.addEventListener('blur', (event) => {
             event.target.value = event.target.value.replace(/[^\d\-\(\)\+]/g, '');
             event.target.value = event.target.value.replace(/\s{1,}/g, ' ');
+            if (item.value.length < 6) {
+                item.value = "";
+            }
         });
     });
     form2Message.addEventListener('input', (event) => {

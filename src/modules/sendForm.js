@@ -33,7 +33,6 @@ const sendForm = ({ formId, someElem = [] }) => {
         });
         someElem.forEach(elem => {
             const element = document.getElementById(elem.id);
-            console.log(element);
             if (elem.type === 'block') {
                 formBody[elem.id] = element.textContent;
             } else if (elem.type === 'input') {
@@ -47,6 +46,10 @@ const sendForm = ({ formId, someElem = [] }) => {
                 formElements.forEach(input => {
                     input.value = ""; 
                 });
+                const clearText = () => {
+                    statusBlock.textContent = "" 
+                }
+                setTimeout(clearText, 5000)
             })
             .catch(error => {
                 statusBlock.textContent = errorText;
