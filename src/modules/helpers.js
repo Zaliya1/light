@@ -18,8 +18,4 @@ const animate = ({timing, draw, duration}) => {
   
     });
 };
-const clearURL = () => {
-  window.location.hash = '';
-  console.log('clear')
-};
-export {animate, clearURL};
+export {animate};

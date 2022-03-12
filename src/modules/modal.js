@@ -1,4 +1,4 @@
-import {animate, clearURL} from './helpers'
+import {animate} from './helpers'
 const modal = () => {
     const buttons = document.querySelectorAll('.popup-btn');
     const modal = document.querySelector('.popup');
@@ -28,12 +28,10 @@ const modal = () => {
                         modal.style.opacity = progress;
                     },
                 });
-                clearURL()
             });
         });
         modal.addEventListener('click', (event) => {
             if (!event.target.closest('.popup-content') || event.target.classList.contains('popup-close')) {
-                clearURL();
                 modal.style.width = 'auto';
                 popupContent.style.display = 'none';
                 animate({
@@ -46,7 +44,6 @@ const modal = () => {
                     },
                 });
             }
-            clearURL()
         });
         
     } else {
