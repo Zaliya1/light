@@ -62,6 +62,7 @@ const validateForm = () => {
 
     });
     formEmails.forEach(item => {
+        item.setAttribute("required", "required");
         item.addEventListener('input', (event) => {
             event.target.value = event.target.value.replace(/[^\w\@\-\.\!\~\*\']/, '');
         });
